@@ -129,6 +129,21 @@
             this.label36 = new System.Windows.Forms.Label();
             this.CBCustomMMSContacts = new System.Windows.Forms.ComboBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.LBSubAccInfo = new System.Windows.Forms.ListBox();
+            this.lblSubFileName = new System.Windows.Forms.Label();
+            this.btnSelectCSV = new System.Windows.Forms.Button();
+            this.btnSubUpload = new System.Windows.Forms.Button();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.AutoContactLists = new System.Windows.Forms.Button();
+            this.label39 = new System.Windows.Forms.Label();
+            this.LBContactLists = new System.Windows.Forms.ListBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label32 = new System.Windows.Forms.Label();
+            this.TBContactListName = new System.Windows.Forms.TextBox();
+            this.CreateContactList = new System.Windows.Forms.Button();
+            this.ContactCSV = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -142,6 +157,8 @@
             this.groupBox5.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            this.tabPage8.SuspendLayout();
             this.SuspendLayout();
             // 
             // TBResultsBox
@@ -162,6 +179,8 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
+            this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(33, 20);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -1244,6 +1263,154 @@
             this.label37.TabIndex = 5;
             this.label37.Text = "Sent!";
             // 
+            // tabPage7
+            // 
+            this.tabPage7.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.tabPage7.Controls.Add(this.LBSubAccInfo);
+            this.tabPage7.Controls.Add(this.lblSubFileName);
+            this.tabPage7.Controls.Add(this.btnSelectCSV);
+            this.tabPage7.Controls.Add(this.btnSubUpload);
+            this.tabPage7.Location = new System.Drawing.Point(4, 39);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(1883, 760);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Sub-Account Import";
+            // 
+            // LBSubAccInfo
+            // 
+            this.LBSubAccInfo.FormattingEnabled = true;
+            this.LBSubAccInfo.ItemHeight = 29;
+            this.LBSubAccInfo.Location = new System.Drawing.Point(31, 167);
+            this.LBSubAccInfo.Name = "LBSubAccInfo";
+            this.LBSubAccInfo.Size = new System.Drawing.Size(1321, 555);
+            this.LBSubAccInfo.TabIndex = 22;
+            // 
+            // lblSubFileName
+            // 
+            this.lblSubFileName.AutoSize = true;
+            this.lblSubFileName.Location = new System.Drawing.Point(369, 108);
+            this.lblSubFileName.Name = "lblSubFileName";
+            this.lblSubFileName.Size = new System.Drawing.Size(58, 29);
+            this.lblSubFileName.TabIndex = 21;
+            this.lblSubFileName.Text = "...";
+            // 
+            // btnSelectCSV
+            // 
+            this.btnSelectCSV.Location = new System.Drawing.Point(101, 99);
+            this.btnSelectCSV.Name = "btnSelectCSV";
+            this.btnSelectCSV.Size = new System.Drawing.Size(245, 48);
+            this.btnSelectCSV.TabIndex = 20;
+            this.btnSelectCSV.Text = "Select CSV:";
+            this.btnSelectCSV.UseVisualStyleBackColor = true;
+            this.btnSelectCSV.Click += new System.EventHandler(this.btnSelectCSV_Click);
+            // 
+            // btnSubUpload
+            // 
+            this.btnSubUpload.Location = new System.Drawing.Point(1159, 93);
+            this.btnSubUpload.Name = "btnSubUpload";
+            this.btnSubUpload.Size = new System.Drawing.Size(193, 58);
+            this.btnSubUpload.TabIndex = 19;
+            this.btnSubUpload.Text = "Upload";
+            this.btnSubUpload.UseVisualStyleBackColor = true;
+            this.btnSubUpload.Click += new System.EventHandler(this.btnSubUpload_Click);
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.tabPage8.Controls.Add(this.AutoContactLists);
+            this.tabPage8.Controls.Add(this.label39);
+            this.tabPage8.Controls.Add(this.LBContactLists);
+            this.tabPage8.Controls.Add(this.button3);
+            this.tabPage8.Controls.Add(this.label32);
+            this.tabPage8.Controls.Add(this.TBContactListName);
+            this.tabPage8.Controls.Add(this.CreateContactList);
+            this.tabPage8.Controls.Add(this.ContactCSV);
+            this.tabPage8.Location = new System.Drawing.Point(4, 39);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(1883, 760);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "Misc.";
+            // 
+            // AutoContactLists
+            // 
+            this.AutoContactLists.Location = new System.Drawing.Point(73, 364);
+            this.AutoContactLists.Name = "AutoContactLists";
+            this.AutoContactLists.Size = new System.Drawing.Size(262, 132);
+            this.AutoContactLists.TabIndex = 10;
+            this.AutoContactLists.Text = "Auto Create and fill Lists";
+            this.AutoContactLists.UseVisualStyleBackColor = true;
+            this.AutoContactLists.Click += new System.EventHandler(this.AutoContactLists_Click);
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(906, 223);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(163, 29);
+            this.label39.TabIndex = 9;
+            this.label39.Text = "All Lists:";
+            // 
+            // LBContactLists
+            // 
+            this.LBContactLists.FormattingEnabled = true;
+            this.LBContactLists.ItemHeight = 29;
+            this.LBContactLists.Location = new System.Drawing.Point(906, 265);
+            this.LBContactLists.Name = "LBContactLists";
+            this.LBContactLists.Size = new System.Drawing.Size(301, 439);
+            this.LBContactLists.TabIndex = 8;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(906, 80);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(301, 91);
+            this.button3.TabIndex = 4;
+            this.button3.Text = "Add CSV Contacts to List";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(460, 69);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(283, 29);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "Contact List Name:";
+            // 
+            // TBContactListName
+            // 
+            this.TBContactListName.Location = new System.Drawing.Point(414, 101);
+            this.TBContactListName.Name = "TBContactListName";
+            this.TBContactListName.Size = new System.Drawing.Size(390, 40);
+            this.TBContactListName.TabIndex = 2;
+            // 
+            // CreateContactList
+            // 
+            this.CreateContactList.Location = new System.Drawing.Point(440, 161);
+            this.CreateContactList.Name = "CreateContactList";
+            this.CreateContactList.Size = new System.Drawing.Size(334, 61);
+            this.CreateContactList.TabIndex = 1;
+            this.CreateContactList.Text = "Create Contact List";
+            this.CreateContactList.UseVisualStyleBackColor = true;
+            this.CreateContactList.Click += new System.EventHandler(this.CreateContactList_Click);
+            // 
+            // ContactCSV
+            // 
+            this.ContactCSV.Location = new System.Drawing.Point(94, 80);
+            this.ContactCSV.Name = "ContactCSV";
+            this.ContactCSV.Size = new System.Drawing.Size(241, 61);
+            this.ContactCSV.TabIndex = 0;
+            this.ContactCSV.Text = "Select CSV";
+            this.ContactCSV.UseVisualStyleBackColor = true;
+            this.ContactCSV.Click += new System.EventHandler(this.ContactCSV_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Title = "Select CSV:";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -1273,6 +1440,10 @@
             this.tabPage6.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1379,6 +1550,21 @@
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.ComboBox CBCustomMMSContacts;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.Button btnSubUpload;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnSelectCSV;
+        private System.Windows.Forms.Label lblSubFileName;
+        private System.Windows.Forms.ListBox LBSubAccInfo;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.Button ContactCSV;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox TBContactListName;
+        private System.Windows.Forms.Button CreateContactList;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ListBox LBContactLists;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Button AutoContactLists;
     }
 }
 

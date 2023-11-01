@@ -15,6 +15,8 @@ using IO.ClickSend.ClickSend.Model;
 using System.Security.Cryptography.X509Certificates;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using System.IO;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace ClickSendAPI
 {
@@ -41,11 +43,14 @@ namespace ClickSendAPI
         ContactApi ContactAPI;
         SmsCampaignApi SmsCampaignAPI;
         CredentialsPopup CredPop;
+        SubaccountApi SubaccountAPI;
         Configuration APIConfig;
 
         FContactListEntry ContactListEntry;
         List<FContactListEntry> AllContactLists;
         List<Contact> ListContacts;
+        Stream CSV;
+        Stream TestCSV;
         string StrAccNum;
         int intAccNum;
         bool AccNumIsValid = false;
@@ -75,6 +80,7 @@ namespace ClickSendAPI
             ContactListAPI = new ContactListApi(config);
             ContactAPI = new ContactApi(config);
             SmsCampaignAPI = new SmsCampaignApi(config);
+            SubaccountAPI = new SubaccountApi(config);
 
             AllContactLists = new List<FContactListEntry>();
             ListContacts = new List<Contact>();
@@ -145,6 +151,7 @@ namespace ClickSendAPI
                 new SmsMessage(
                     to: TBSMSTo.Text,
                     body: TBSMSBody.Text,
+                    from: "",
                     source: "sdk",
                     schedule: 0
                     )
@@ -437,6 +444,15 @@ namespace ClickSendAPI
             }
         }
 
+        private int ParseContactListNumber(string response)
+        {
+            string[] InResponse = response.Split(',');
+            string InNumber = InResponse[3];
+            string[] SplitNumber = InNumber.Split(':');
+            string OutNumber = SplitNumber[2];
+
+            return int.Parse(OutNumber);
+        }
         private void CBContactLists_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CBContactLists.SelectedIndex == -1)
@@ -578,6 +594,209 @@ namespace ClickSendAPI
             this.Show();
             CredPop.Opacity = 100;
             CredPop.Show();
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            lblSubFileName.Text = openFileDialog1.FileName;
+            CSV = openFileDialog1.OpenFile();
+            StreamReader SR = new StreamReader(CSV);
+
+            string InRow = SR.ReadLine();
+            string[] Columns = InRow.Split(new char[] { ',' });
+
+            string TopDisplay = "";
+            foreach(string str in Columns)
+            {
+                TopDisplay += str + " - ";
+            }
+
+            LBSubAccInfo.Items.Add(TopDisplay);
+
+            while(!SR.EndOfStream )
+            {
+                string Row = SR.ReadLine();
+                string[] Split = Row.Split(new char[] { ',' });
+
+                string LineString = "";
+                foreach(string str in Split)
+                {
+                    LineString += str + " - ";
+                }
+
+                LBSubAccInfo.Items.Add(LineString);
+            }
+        }
+
+        private void btnSelectCSV_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void ParseCSV()
+        {
+
+        }
+
+        private void btnSubUpload_Click(object sender, EventArgs e)
+        {
+            CSV = openFileDialog1.OpenFile();
+            StreamReader SR = new StreamReader(CSV);
+
+            string InRow = SR.ReadLine();
+
+            while (!SR.EndOfStream)
+            {
+                string Row = SR.ReadLine();
+                string[] Columns = Row.Split(',');
+
+                Guid guid = Guid.NewGuid();
+                string APIKey = guid.ToString();
+
+                Subaccount CurSub = new Subaccount(
+                    apiUsername: Columns[0],
+                    password: Columns[1],
+                    email: Columns[2],
+                    phoneNumber: Columns[3],
+                    firstName: Columns[4],
+                    lastName: Columns[5],
+                    accessBilling: 1,
+                    accessContacts: 1,
+                    accessUsers: 1,
+                    accessReporting: 1,
+                    accessSettings: 1
+                    );
+                var response = SubaccountAPI.SubaccountsPost(CurSub);
+            }
+        }
+
+        private void CreateCSV_Click(object sender, EventArgs e)
+        {
+            StringBuilder SB = new StringBuilder();
+
+            SB.AppendLine("FirstName, Last_Name, Mobile, Email");
+            for(int i = 0; i <= 200000; i++)
+            {
+                SB.AppendLine("John, Doe, +1234567890, test@test.com");
+            }
+
+            File.WriteAllText(@"C:\\Users\\micsha\\Documents\\Test\\Test.csv", SB.ToString());
+        }
+
+        private void BuildMessageCollection_Click(object sender, EventArgs e)
+        {
+            TestCSV = File.OpenRead(@"C:\\Users\\micsha\\Documents\\Test\\Test.csv");
+            StreamReader SR = new StreamReader(TestCSV);
+
+            //Read header
+            string InRow = SR.ReadLine();
+            var listOfSMS = new List<SmsMessage>();
+
+            while (!SR.EndOfStream)
+            {
+                string Row = SR.ReadLine();
+                string[] Columns = Row.Split(',');
+
+                // Column[0] = First Name / Column[1] = Last Name / Column[2] = Mobile / Column[3] = email
+                SmsMessage CurrentMessage = new SmsMessage(
+                                             to: Columns[2],
+                                             body: "Hello, this is a test message!",
+                                             from: "",
+                                             source: "sdk",
+                                             schedule: 0
+                                             );
+                listOfSMS.Add(CurrentMessage);
+            }
+
+            // Post Messages:
+
+            //var SMSCollesction = new SmsMessageCollection(listOfSMS);
+            //string response = SMSAPI.SmsSendPost(SMSCollesction);
+        }
+
+        private void ContactCSV_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void CreateContactList_Click(object sender, EventArgs e)
+        {
+            string ContactListName = TBContactListName.Text;
+            ContactList contactList = new ContactList( listName: ContactListName);
+
+            var response = ContactListAPI.ListsPost(contactList);
+
+            var test = 1;
+        }
+
+        private void AutoContactLists_Click(object sender, EventArgs e)
+        {
+            CSV = openFileDialog1.OpenFile();
+            if (!CSV.CanRead) { return; }
+            StreamReader SR = new StreamReader(CSV);
+
+            string InRow = SR.ReadLine();
+            int ContactsCreated = 0;
+
+            string FileName = openFileDialog1.FileName;
+
+            string[] SplitFileName = FileName.Split('\\');
+            FileName = SplitFileName[SplitFileName.Length - 1];
+            string[] SplitPeriod = FileName.Split('.');
+            string ContactListName = SplitPeriod[0];
+
+            ContactList contactList = new ContactList(listName: ContactListName);
+
+            var response = ContactListAPI.ListsPost(contactList);
+
+            int ContactListNumber = ParseContactListNumber(response);
+
+            var AllContacts = new List<Contact>();
+          
+            while (!SR.EndOfStream) {
+                string InLine = SR.ReadLine();
+                string[] Columns = InLine.Split(',');
+                string[] RemoveHyperLink = Columns[5].Split('"');
+                string HyperLink = RemoveHyperLink[3];
+                HyperLink = HyperLink.Replace("\"", "");
+
+                Columns[2] = Columns[2].Remove(0,1);
+                Columns[2].Trim();
+                Columns[3] = Columns[3].Remove(Columns[3].Length - 1);
+                Columns[3].Replace(" ", "");
+
+                Contact NewContact = new Contact(
+                    phoneNumber: Columns[0],
+                    organizationName: Columns[1],
+                    addressLine1: Columns[2],
+                    addressCity: Columns[3],
+                    custom1: Columns[4],
+                    custom2: HyperLink,
+                    custom3: Columns[6]
+                    );
+
+                AllContacts.Add( NewContact );
+                try
+                {
+                    var AddContactResponse = ContactAPI.ListsContactsByListIdPost(NewContact, ContactListNumber);
+                    ContactsCreated++;
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+                if (ContactsCreated >= 20000)
+                {
+                    ContactsCreated = 0;
+                    AllContacts.Clear();
+                    //Create contact list for adding contacts
+                    string NewContactListName = "";
+
+                    ContactList NewContactList = new ContactList(listName: NewContactListName);
+
+                    var ContactListResponse = ContactListAPI.ListsPost(NewContactList);
+                }//20K Contacts
+            } //SR.EOF
         }
     }
 }
